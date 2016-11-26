@@ -1,5 +1,5 @@
 {
-  "name": "yts",
+  "name": "node-yts",
   "version": "1.0.0",
   "description": "node module for YTS torrents search",
   "main": "index.js",
