@@ -1,6 +1,6 @@
 var yts = require('./index').yts;
 var movie = require("./index").movie;
 
-yts.search("The BFG");
+//yts.search("The BFG");
 
-//yts.movieDetails(6179);
+movie.getMovie(6179);
