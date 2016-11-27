@@ -1,6 +1,6 @@
 {
   "name": "node-yts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "node module for YTS torrents search",
   "main": "index.js",
   "dependencies": {
