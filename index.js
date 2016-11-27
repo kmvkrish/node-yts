@@ -1,7 +1,7 @@
 var request = require('request');
 var open = require("open");
 
-var baseURL = "http://yts.ac/api/v2";
+var baseURL = "http://yts.ag/api/v2";
 var self;
 
 var YTS = function(){
@@ -9,35 +9,23 @@ var YTS = function(){
 	this.movies = [];
 	
 	this.print_torrents = function(torrents){
-		for(var i = 0; i< self.movies.length; i++){
-			console.log("=========================================================================");
-			console.log("Title\tIMDb Code\tMovie ID\tURL");
-			console.log(self.movies[i].title + "\t" + self.movies[i].imdb_code + "\t" + self.movies[i].id + "\t" + self.movies[i].url);
-			console.log("=========================================================================");
+		if(torrents){
+			for(var i=0; i< torrents.length; i++){
+				console.log("==========================================================================================");
+				console.log("Title : " + torrents[i].title);
+				console.log("IMDB Code : " + torrents[i].imdb_code);
+				console.log("URL : " + torrents[i].url);
+				console.log("ID : " + torrents[i].id);
+				console.log("Rating : " + torrents[i].rating);
+				console.log("==========================================================================================");
+			}
 		}
 	}
 };
 
-YTS.prototype.getAllMovies = function(page, limit){
-	var rawData = '';
-	if(typeof(page) === 'undefined' || isNaN(page)){
-		page = 1;
-	}
-	if(typeof(limit) === 'undefined' || isNaN(limit)){
-		limit = 20;
-	}
-	var res = request.get(baseURL + "/list_movies.json?" + 'page=' + page + "&limit=" + limit);
-	res.on('data', (chunk) => { rawData += chunk;});
-	res.on('end', () => {
-		var movies = JSON.parse(rawData);
-		self.movies = movies.data.movies;
-		self.print_torrents();
-	});
-};
-
 YTS.prototype.search = function(query){
 	var rawData = '';
-	var res = request.get(baseURL + "/list_movies.json?query_term=" + query);
+	var res = request.get(baseURL + "/list_movies.json?query_term=" + encodeURI(query));
 	res.on('data', (chunk) => { rawData += chunk;});
 	res.on('end', () => {
 		var movies = JSON.parse(rawData);
@@ -46,25 +34,32 @@ YTS.prototype.search = function(query){
 			self.print_torrents();
 		}else{
 			console.log("No movies found");
+			self.movies = [];
 		}
+	});
+};
+
+YTS.prototype.list_movies = function(){
+	var rawData = '';
+	request(baseURL + "/list_movies.json", (error, response, body) => {
+		if(error){
+			console.log(error);
+			return;
+		}
+		if(response.statusCode != 200){
+			console.log(response);
+			return;
+		}
+		var movies = JSON.parse(body);
+		self.movies = movies.data.movies;
+		self.print_torrents(self.movies);
 	});
 };
 
 var _movie;
 function Movie(){
 	_movie = this;
-	this.movie = {
-		"title":"",
-		"url":"",
-		"id":0,
-		"imdb_code":"",
-		"description":"",
-		"language":"",
-		"rating":0.0,
-		"genre": [],
-		"torrents": [],
-		"background_image":""
-	};
+	this.movie = {};
 
 	this.getTitle = function(){
 		return _movie.movie.title;
@@ -111,14 +106,9 @@ Movie.prototype.getMovie = function(movie_id){
 	res.on('data', (chunk) => {rawData += chunk;});
 	res.on('end', () => {
 		if(rawData != ""){
-			console.log(JSON.parse(rawData));
 			var movieObject = JSON.parse(rawData);
 				if(movieObject.data.movie){
-					/*console.log("=========================================================================");
-					console.log("Title\tIMDb Code\tMovie ID\t");
-					console.log(movie.data.movie.title + "\t" + movie.data.movie.imdb_code + "\t" + movie.data.movie.id);
-					console.log("=========================================================================");*/
-
+					
 					_movie.movie = {
 						"title": movieObject.data.movie["title"],
 						"url": movieObject.data.movie["url"],
@@ -131,6 +121,7 @@ Movie.prototype.getMovie = function(movie_id){
 						"description": movieObject.data.movie["description_full"],
 						"language": movieObject.data.movie["language"]
 					};
+					console.log("Movie:", _movie.movie);
 				}
 		}else{
 			_movie.movie = {};
