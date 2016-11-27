@@ -94,10 +94,6 @@ function Movie(){
 	this.openInBrowser = function(url){
 		open(url);
 	};
-	this.download = function(url){
-		open(url);
-	};
-
 }
 
 Movie.prototype.getMovie = function(movie_id){
@@ -114,7 +110,7 @@ Movie.prototype.getMovie = function(movie_id){
 						"url": movieObject.data.movie["url"],
 						"id": movieObject.data.movie["id"],
 						"rating": movieObject.data.movie["rating"],
-						"genre": movieObject.data.movie["genre"],
+						"genre": movieObject.data.movie["genres"],
 						"background_image" : movieObject.data.movie["background_image"],
 						"torrents": movieObject.data.movie["torrents"],
 						"imdb_code": movieObject.data.movie["imdb_code"],
