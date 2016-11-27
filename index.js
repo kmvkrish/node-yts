@@ -39,9 +39,15 @@ YTS.prototype.search = function(query){
 	});
 };
 
-YTS.prototype.list_movies = function(){
+YTS.prototype.list_movies = function(page, limit){
 	var rawData = '';
-	request(baseURL + "/list_movies.json", (error, response, body) => {
+	if(typeof(page) === 'undefined' || isNaN(page)){
+		page = 1;
+	}
+	if(typeof(limit) === 'undefined' || isNaN(limit)){
+		limit = 20;
+	}
+	request(baseURL + "/list_movies.json?page=" + page + "&limit=" + limit, (error, response, body) => {
 		if(error){
 			console.log(error);
 			return;
