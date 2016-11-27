@@ -1,7 +1,7 @@
 var request = require('request');
 var open = require("open");
 
-var baseURL = "https://YTS.ag/api/v2";
+var baseURL = "http://yts.ac/api/v2";
 var self;
 
 var YTS = function(){
@@ -61,7 +61,7 @@ function Movie(){
 		"description":"",
 		"language":"",
 		"rating":0.0,
-		"genres": [],
+		"genre": [],
 		"torrents": [],
 		"background_image":""
 	};
@@ -87,8 +87,8 @@ function Movie(){
 	this.getRating = function(){
 		return _movie.movie.rating;
 	};
-	this.getGenres = function(){
-		return _movie.movie.genres;
+	this.getGenre = function(){
+		return _movie.movie.genre;
 	};
 	this.getTorrents = function(){
 		return _movie.movie.torrents;
@@ -111,26 +111,27 @@ Movie.prototype.getMovie = function(movie_id){
 	res.on('data', (chunk) => {rawData += chunk;});
 	res.on('end', () => {
 		if(rawData != ""){
+			console.log(JSON.parse(rawData));
 			var movieObject = JSON.parse(rawData);
-			if(movieObject.data.movie){
-				/*console.log("=========================================================================");
-				console.log("Title\tIMDb Code\tMovie ID\t");
-				console.log(movie.data.movie.title + "\t" + movie.data.movie.imdb_code + "\t" + movie.data.movie.id);
-				console.log("=========================================================================");*/
+				if(movieObject.data.movie){
+					/*console.log("=========================================================================");
+					console.log("Title\tIMDb Code\tMovie ID\t");
+					console.log(movie.data.movie.title + "\t" + movie.data.movie.imdb_code + "\t" + movie.data.movie.id);
+					console.log("=========================================================================");*/
 
-				_movie.movie = {
-					"title": movieObject.data.movie["title"],
-					"url": movieObject.data.movie["url"],
-					"id": movieObject.data.movie["id"],
-					"rating": movieObject.data.movie["rating"],
-					"genres": movieObject.data.movie["genres"],
-					"background_image" : movieObject.data.movie["background_image"],
-					"torrents": movieObject.data.movie["torrents"],
-					"imdb_code": movieObject.data.movie["imdb_code"],
-					"description": movieObject.data.movie["description_full"],
-					"language": movieObject.data.movie["language"]
-				};
-			}
+					_movie.movie = {
+						"title": movieObject.data.movie["title"],
+						"url": movieObject.data.movie["url"],
+						"id": movieObject.data.movie["id"],
+						"rating": movieObject.data.movie["rating"],
+						"genre": movieObject.data.movie["genre"],
+						"background_image" : movieObject.data.movie["background_image"],
+						"torrents": movieObject.data.movie["torrents"],
+						"imdb_code": movieObject.data.movie["imdb_code"],
+						"description": movieObject.data.movie["description_full"],
+						"language": movieObject.data.movie["language"]
+					};
+				}
 		}else{
 			_movie.movie = {};
 		}
