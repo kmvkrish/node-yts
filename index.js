@@ -31,7 +31,7 @@ YTS.prototype.search = function(query){
 		var movies = JSON.parse(rawData);
 		if(movies.data.movies){
 			self.movies = movies.data.movies;
-			self.print_torrents();
+			self.print_torrents(self.movies);
 		}else{
 			console.log("No movies found");
 			self.movies = [];
@@ -121,7 +121,7 @@ Movie.prototype.getMovie = function(movie_id){
 						"description": movieObject.data.movie["description_full"],
 						"language": movieObject.data.movie["language"]
 					};
-					console.log("Movie:", _movie.movie);
+					
 				}
 		}else{
 			_movie.movie = {};
