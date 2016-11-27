@@ -20,7 +20,13 @@ Usage:
     
   For getting list of movies, call list_movies method
   For example:
-    yts.list_movies() gets top 20 movies and stores in movies property of the instance. Can be accessed using yts.movies.
+    yts.list_movies() gets the first 20 movies of "page number" 1 and stores in movies property of the instance. Can be accessed using yts.movies.
+
+  For movies from specific page and specified limit, call yts.list_movies() with the values.
+  For example:
+  	yts.list_movies(3,20) gets 30 movies from page 3 and stores in movies property.
+
+  By default, if no parameters are sent, the request will fetch 20 results from page 1.
     
 API:
   Methods in YTS:
